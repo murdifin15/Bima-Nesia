@@ -1,0 +1,171 @@
+# =====================================================
+#  BIMA-NESIA – CI/CD Pipeline
+#  GitHub Actions → Deploy ke Vercel
+#
+#  Secrets yang diperlukan (Settings → Secrets → Actions):
+#    VERCEL_TOKEN      → Vercel API Token (vercel.com/account/tokens)
+#    VERCEL_ORG_ID     → dari perintah: vercel env pull
+#    VERCEL_PROJECT_ID → dari perintah: vercel env pull
+# =====================================================
+
+name: 🚀 Deploy to Vercel
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+env:
+  VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NODE_VERSION:      '20'
+
+# ─────────────────────────────────────────────────────
+# JOB 1 – Build: Rebuild script.js dari CSV + Validasi
+# ─────────────────────────────────────────────────────
+jobs:
+  build:
+    name: 🏗️ Build & Validate Dataset
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 🔄 Rebuild script.js dari CSV
+        run: node update-dataset.js
+
+      - name: ✅ Validasi file wajib ada
+        run: |
+          echo "Memeriksa file yang wajib ada..."
+          for f in index.html style.css script.js vercel.json; do
+            if [ -f "$f" ]; then
+              echo "  ✔ $f ($(wc -c < $f) bytes)"
+            else
+              echo "  ✖ $f TIDAK DITEMUKAN!" && exit 1
+            fi
+          done
+          echo "Semua file valid ✅"
+
+      - name: 📤 Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bima-nesia-build
+          retention-days: 1
+          path: |
+            index.html
+            style.css
+            script.js
+            vercel.json
+
+# ─────────────────────────────────────────────────────
+# JOB 2 – Deploy Preview (hanya untuk Pull Request)
+# ─────────────────────────────────────────────────────
+  deploy-preview:
+    name: 🔍 Deploy Preview (PR)
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 🔄 Rebuild script.js dari CSV
+        run: node update-dataset.js
+
+      - name: 📦 Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: 🔗 Pull Vercel environment (preview)
+        run: |
+          vercel pull --yes \
+            --environment=preview \
+            --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🔍 Deploy Preview ke Vercel
+        id: deploy-preview
+        run: |
+          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "preview_url=$URL" >> $GITHUB_OUTPUT
+          echo "Preview URL: $URL"
+
+      - name: 💬 Komentar URL Preview di PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = '${{ steps.deploy-preview.outputs.preview_url }}';
+            const sha  = context.payload.pull_request.head.sha.slice(0, 7);
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner:        context.repo.owner,
+              repo:         context.repo.repo,
+              body: [
+                '## 🔍 Preview Deployment — Bima-Nesia',
+                '',
+                `✅ Berhasil di-deploy dari commit \`${sha}\``,
+                '',
+                `🔗 **URL Preview**: ${url}`,
+                '',
+                '> 🤖 Dibuat otomatis oleh GitHub Actions'
+              ].join('\n')
+            });
+
+# ─────────────────────────────────────────────────────
+# JOB 3 – Deploy Production (push ke master/main)
+# ─────────────────────────────────────────────────────
+  deploy-production:
+    name: 🚀 Deploy Production
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 🔄 Rebuild script.js dari CSV
+        run: node update-dataset.js
+
+      - name: 📦 Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: 🔗 Pull Vercel environment (production)
+        run: |
+          vercel pull --yes \
+            --environment=production \
+            --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Deploy Production ke Vercel
+        id: deploy-prod
+        run: |
+          URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "production_url=$URL" >> $GITHUB_OUTPUT
+          echo "Production URL: $URL"
+
+      - name: 📋 Ringkasan deployment
+        run: |
+          echo "## ✅ Deployment Berhasil!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Info | Detail |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌐 URL Production | ${{ steps.deploy-prod.outputs.production_url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📌 Commit | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| 👤 Pushed by | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⏰ Waktu | $(date '+%Y-%m-%d %H:%M UTC') |" >> $GITHUB_STEP_SUMMARY
