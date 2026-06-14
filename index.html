@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bima-Nesia – Kamus Digital Bahasa Bima</title>
+  <meta name="description" content="Bima-Nesia adalah kamus digital interaktif untuk menerjemahkan Bahasa Bima ke Bahasa Indonesia dan sebaliknya. Lestarikan Bahasa Bima bersama kami." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <div class="logo-badge">
+      <div class="logo-icon">🌺</div>
+      <h1 class="logo-text">Bima-Nesia</h1>
+    </div>
+    <p class="tagline">Kamus Digital Bahasa Bima</p>
+    <div class="header-deco">
+      <div class="deco-line"></div>
+      <div class="deco-diamond"></div>
+      <div class="deco-line"></div>
+      <div class="deco-diamond"></div>
+      <div class="deco-line"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-chip">
+      <span class="dot"></span>
+      <span id="totalWords">36</span> Kosakata
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:var(--gold)"></span>
+      <span id="totalSentences">45</span> Kalimat
+    </div>
+    <div class="stat-chip">
+      <span class="dot" style="background:#4CAF50"></span>
+      Gratis &amp; Terbuka
+    </div>
+  </div>
+
+  <!-- Translator Card -->
+  <div class="translator-card">
+
+    <!-- Direction Toggle -->
+    <div class="direction-toggle">
+      <button class="dir-btn active" id="btnBimaToIna" onclick="setDirection('bima-ina')">
+        🏝️ Bima → Indonesia
+      </button>
+      <button
+        class="swap-btn"
+        id="swapBtn"
+        onclick="swapDirection()"
+        title="Balik arah terjemahan"
+        aria-label="Tukar arah terjemahan"
+      >⇄</button>
+      <button class="dir-btn" id="btnInaToBima" onclick="setDirection('ina-bima')">
+        🇮🇩 Indonesia → Bima
+      </button>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabKata" onclick="setMode('kata')">
+        📝 Kata <span class="tab-badge" id="badgeKata">36</span>
+      </button>
+      <button class="mode-tab" id="tabKalimat" onclick="setMode('kalimat')">
+        💬 Kalimat <span class="tab-badge" id="badgeKalimat">45</span>
+      </button>
+      <button class="mode-tab" id="tabSemua" onclick="setMode('semua')">
+        🔍 Cari Semua
+      </button>
+    </div>
+
+    <!-- Input -->
+    <div class="input-wrapper">
+      <label class="input-label" for="searchInput" id="inputLabel">
+        Ketik kata dalam Bahasa Bima
+      </label>
+      <div class="input-field-wrap">
+        <button
+          class="mic-btn"
+          id="micBtn"
+          onclick="toggleSTT()"
+          title="Rekam suara (klik untuk mulai)"
+          aria-label="Rekam suara dengan mikrofon"
+        >🎤</button>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Cari kata..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          oninput="onInputChange()"
+          onkeydown="onKeyDown(event)"
+        />
+        <button
+          class="clear-btn"
+          id="clearBtn"
+          onclick="clearInput()"
+          title="Hapus"
+          aria-label="Hapus input"
+        >✕</button>
+      </div>
+      <div class="stt-status" id="sttStatus"></div>
+    </div>
+
+    <!-- Translate Button -->
+    <button class="translate-btn" id="translateBtn" onclick="doTranslate()">
+      🔍 Terjemahkan
+    </button>
+
+    <!-- Result Area -->
+    <div class="result-area" id="resultArea">
+      <div id="resultContent"></div>
+    </div>
+
+  </div>
+  <!-- /Translator Card -->
+
+  <!-- Sentence Table Section -->
+  <div class="sentence-section">
+    <div class="section-header">
+      <div class="section-title">
+        <div class="icon">💬</div>
+        <span>Daftar Kalimat <span class="vocab-count" id="sentenceCount">45</span></span>
+      </div>
+      <div class="vocab-search-wrap">
+        <input
+          type="text"
+          class="vocab-search"
+          id="sentenceSearch"
+          placeholder="Cari kalimat..."
+          oninput="filterSentences()"
+          aria-label="Cari dalam daftar kalimat"
+        />
+        <span class="vocab-search-icon">🔍</span>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="sentenceTable" class="sentence-table" aria-label="Daftar Kalimat Bahasa Bima">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Bahasa Bima</th>
+            <th>Bahasa Indonesia</th>
+            <th style="text-align:center;width:80px;">Suara</th>
+          </tr>
+        </thead>
+        <tbody id="sentenceTableBody">
+          <!-- Populated by script.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /Sentence Table -->
+
+  <!-- Vocabulary Table Section -->
+  <div class="vocab-section">
+    <div class="section-header">
+      <div class="section-title">
+        <div class="icon">📖</div>
+        <span>Daftar Kosakata <span class="vocab-count" id="vocabCount">36</span></span>
+      </div>
+      <div class="vocab-search-wrap">
+        <input
+          type="text"
+          class="vocab-search"
+          id="vocabSearch"
+          placeholder="Cari kosakata..."
+          oninput="filterVocab()"
+          aria-label="Cari dalam daftar kosakata"
+        />
+        <span class="vocab-search-icon">🔍</span>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="vocabTable" aria-label="Daftar Kosakata Bahasa Bima">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Bahasa Bima</th>
+            <th>Bahasa Indonesia</th>
+            <th style="text-align:center;width:80px;">Suara</th>
+          </tr>
+        </thead>
+        <tbody id="vocabTableBody">
+          <!-- Populated by script.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /Vocabulary Table -->
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">🌺 Bima-Nesia</div>
+  <p>© Bima-Nesia – Melestarikan Bahasa Bima <span class="hearts">♥</span></p>
+  <p style="margin-top:6px; font-size:.78rem;">
+    Dibangun dengan <span class="hearts">❤️</span> untuk budaya Bima &amp; NTB
+  </p>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button
+  class="scroll-top"
+  id="scrollTopBtn"
+  onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  title="Kembali ke atas"
+  aria-label="Kembali ke atas"
+>↑</button>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="script.js"></script>
+
+</body>
+</html>
