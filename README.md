@@ -1,233 +1,147 @@
-# 🌺 Bima-Nesia
-### Kamus Digital Bahasa Bima – Bahasa Indonesia
+# Bima-Nesia: Kamus Digital Bahasa Bima - Bahasa Indonesia
 
-> Aplikasi translator interaktif berbasis web untuk menerjemahkan **Bahasa Bima ↔ Bahasa Indonesia**, dilengkapi fitur suara (Speech-to-Text & Text-to-Speech).
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![HTML5](https://img.shields.io/badge/HTML-5-E34F26.svg)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS-3-1572B6.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Web Speech API](https://img.shields.io/badge/API-Web_Speech_API-5C3EE8.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
----
-
-## 📸 Tampilan
-
-```
-┌─────────────────────────────────────────┐
-│  🌺 Bima-Nesia                          │
-│  KAMUS DIGITAL BAHASA BIMA              │
-│─────────────────────────────────────────│
-│  [🏝️ Bima → Indonesia]  ⇄  [🇮🇩 Indonesia → Bima] │
-│  [ 📝 Kata ]  [ 💬 Kalimat ]  [ 🔍 Cari Semua ] │
-│  🎤 [ ketik kata atau kalimat...      ✕ ] │
-│  [        🔍 Terjemahkan             ] │
-│─────────────────────────────────────────│
-│  📝 Kosakata   hasil terjemahan         │
-│  🔊 Dengarkan  🔊 Kata Asli             │
-└─────────────────────────────────────────┘
-```
+Aplikasi web kamus dan penerjemah interaktif dua arah antara Bahasa Bima dan Bahasa Indonesia. Dirancang sebagai sarana pelestarian bahasa daerah dan media pembelajaran digital, dilengkapi fitur pengenalan suara (*Speech-to-Text*) dan pelafalan otomatis (*Text-to-Speech*).
 
 ---
 
-## ✨ Fitur
+## Ringkasan Proyek
 
-### 🔤 Translator
-- **Toggle arah terjemahan** — Bima → Indonesia atau Indonesia → Bima
-- **Tiga mode pencarian** — Kata saja, Kalimat saja, atau Cari Semua
-- **Pencarian real-time** — hasil langsung muncul saat mengetik
-- **Pencarian case-insensitive** — tidak sensitif huruf besar/kecil
-- **Saran otomatis** — tampil chip kata-kata serupa jika tidak ditemukan persis
-- **Swap arah** — tombol ⇄ untuk membalik arah terjemahan
+Bahasa Bima (Nggahi Mbojo) merupakan bahasa daerah yang kaya akan nilai budaya dan dituturkan oleh masyarakat di Pulau Sumbawa bagian timur, Nusa Tenggara Barat. 
 
-### 🎤 Speech-to-Text (Rekam Suara)
-- Klik tombol 🎤 di kotak input untuk mulai merekam
-- Ucapkan kata atau kalimat — teks otomatis muncul dan diterjemahkan
-- Animasi **pulse merah** saat sedang merekam
-- Pesan status: *"🔴 Sedang merekam..."* atau pesan error yang informatif
-- Bahasa: `id-ID` (Bahasa Indonesia)
-- Otomatis disembunyikan jika browser tidak mendukung
-
-### 🔊 Text-to-Speech (Ucapkan Teks)
-- Tombol **🔊 Dengarkan** dan **🔊 Kata/Kalimat Asli** di setiap hasil terjemahan
-- Ikon 🔊 / 🗣️ di setiap baris tabel kosakata dan kalimat
-- Klik tombol yang sama = **hentikan suara**
-- Animasi pulse saat sedang berbicara
-- Kecepatan bicara: `0.88x` (lebih lambat agar jelas)
-
-### 📋 Tabel Referensi
-- **Tabel Kalimat** — daftar 52+ kalimat lengkap dengan filter pencarian
-- **Tabel Kosakata** — daftar 37+ kosakata lengkap dengan filter pencarian
-- Klik baris tabel → otomatis isi input dan terjemahkan
-- Highlight teks saat filter aktif
+**Bima-Nesia** dibangun untuk menyediakan akses kamus digital yang cepat, interaktif, dan mudah digunakan tanpa memerlukan instalasi server yang rumit. Pengguna dapat mencari terjemahan kata atau kalimat, mendengarkan pelafalan, melakukan input suara melalui mikrofon, serta menelusuri katalog perbendaharaan kata melalui tabel referensi interaktif.
 
 ---
 
-## 📁 Struktur File
+## Fitur Utama
 
-```
+- **Penerjemah Dua Arah (Bidirectional Translator)**:
+  - Mode terjemahan Bahasa Bima ke Bahasa Indonesia dan sebaliknya.
+  - Tiga opsi ruang lingkup pencarian: Kata saja, Kalimat saja, atau Pencarian Menyeluruh.
+  - Pencarian langsung (*real-time search*) dengan algoritma pencocokan yang tidak sensitif huruf besar/kecil (*case-insensitive*).
+  - Rekomendasi kata serupa secara otomatis jika kata kunci tidak ditemukan secara eksak.
+  - Tombol pembalik arah terjemahan (*swap direction*).
+
+- **Pengenalan Suara (Speech-to-Text)**:
+  - Input teks terjemahan secara langsung melalui rekaman mikrofon peramban.
+  - Indikator status rekaman dengan penanganan kesalahan yang informatif.
+
+- **Sintesis Suara (Text-to-Speech)**:
+  - Fitur pelafalan suara otomatis untuk teks hasil terjemahan maupun teks sumber.
+  - Pengaturan laju artikulasi suara terkalibrasi untuk kejelasan pendengaran.
+
+- **Tabel Referensi Kosakata dan Kalimat**:
+  - Daftar perbendaharaan kata dan contoh percakapan terstruktur.
+  - Fitur penyorotan teks (*highlight*) dan integrasi klik langsung ke kotak penerjemah.
+
+- **Otomasi Pembaruan Dataset**:
+  - Sinkronisasi basis data kosakata berbasis berkas CSV menggunakan utilitas skrip Node.js.
+
+---
+
+## Teknologi dan Dependensi
+
+- **Frontend Core**: HTML5 Semantik, CSS3 Vanilla (Responsive Design, Flexbox/Grid, Variabel Desain)
+- **Logika Aplikasi**: Vanilla JavaScript (ES6+)
+- **Speech Engine**: Web Speech API (`SpeechRecognition` dan `SpeechSynthesis`)
+- **Utilitas Dataset**: Node.js (`update-dataset.js` untuk pemrosesan file CSV ke array JavaScript)
+- **Penyedia Font**: Google Fonts (Poppins)
+- **Platform Deployment**: Vercel (`vercel.json`)
+
+---
+
+## Struktur Direktori Repositori
+
+```text
 Bima-Nesia/
-│
-├── index.html                   # Halaman utama (struktur HTML)
-├── style.css                    # Semua styling dan animasi
-├── script.js                    # Logika JS + dataset kosakata/kalimat
-│
-├── kosakata_bima_indonesia.csv  # ✏️ Dataset kosakata (edit di sini)
-├── kalimat_bima_indonesia.csv   # ✏️ Dataset kalimat (edit di sini)
-│
-├── update-dataset.js            # 🔧 Script updater dataset (Node.js)
-├── script.js.bak                # 📂 Backup otomatis script.js
-│
-└── README.md                    # 📖 Dokumentasi ini
+├── index.html                   # Berkas markup HTML utama aplikasi
+├── style.css                    # Lembar gaya CSS: tata letak, komponen UI, dan animasi
+├── script.js                    # Logika utama penerjemah, antarmuka Speech API, & basis data runtime
+├── kosakata_bima_indonesia.csv  # Sumber data mentah kosakata (format CSV)
+├── kalimat_bima_indonesia.csv   # Sumber data mentah contoh kalimat (format CSV)
+├── update-dataset.js            # Skrip otomasi Node.js untuk menyinkronkan data CSV ke script.js
+├── vercel.json                  # Konfigurasi deployment hosting Vercel
+├── .gitignore                   # Konfigurasi pengabaian berkas sementara Git
+├── LICENSE                      # Berkas lisensi resmi MIT (Hak Cipta Murdifin)
+└── README.md                    # Dokumentasi teknis proyek
 ```
+
+### Penjelasan Komponen Berkas
+
+| Berkas / Direktori | Deskripsi Fungsional |
+| :--- | :--- |
+| `index.html` | Struktur dokumen antarmuka web, panel input terjemahan, kontrol tombol suara, dan tabel referensi. |
+| `style.css` | Mengatur tema visual, palet warna, tipografi Poppins, responsivitas seluler, dan animasi status mikrofon. |
+| `script.js` | Menangani algoritma penerjemahan, pemetaan kamus data, integrasi Web Speech API, dan manipulasi DOM. |
+| `kosakata_bima_indonesia.csv` | Dataset tabel kata dasar Bahasa Bima dan padanan artinya dalam Bahasa Indonesia. |
+| `kalimat_bima_indonesia.csv` | Dataset kumpulan kalimat percakapan sehari-hari Bahasa Bima dan terjemahannya. |
+| `update-dataset.js` | Program CLI Node.js untuk mengonversi berkas CSV terbaru menjadi array objek pada `script.js` secara otomatis dengan pembuatan berkas cadangan (*backup*). |
 
 ---
 
-## 🚀 Cara Menjalankan
+## Panduan Penggunaan
 
-Aplikasi ini **tidak membutuhkan server** — cukup buka file HTML di browser.
+### Menjalankan Aplikasi Secara Lokal
+Aplikasi ini berbasis *client-side* mandiri dan tidak memerlukan konfigurasi server khusus. Cukup buka berkas `index.html` pada peramban web:
 
-```bash
-# Buka langsung di browser
-start index.html         # Windows
-open index.html          # macOS
-xdg-open index.html      # Linux
-```
-
-> **Rekomendasi Browser**: Google Chrome atau Microsoft Edge  
-> (untuk fitur Speech-to-Text & Text-to-Speech penuh)
+- **Windows**:
+  ```cmd
+  start index.html
+  ```
+- **macOS**:
+  ```bash
+  open index.html
+  ```
+- **Linux**:
+  ```bash
+  xdg-open index.html
+  ```
 
 ---
 
-## 🔄 Cara Update Dataset
+## Panduan Pembaruan Dataset
 
-Setiap kali ingin menambah atau mengedit kosakata/kalimat:
+Untuk memperbarui atau menambahkan entri kosakata dan kalimat baru:
 
-### 1. Edit file CSV
+### 1. Perbarui Berkas CSV
+- Buka `kosakata_bima_indonesia.csv` untuk menambah kata baru:
+  ```csv
+  Bahasa_Bima,Bahasa_Indonesia
+  KataBaru,TerjemahanIndonesia
+  ```
+- Buka `kalimat_bima_indonesia.csv` untuk menambah contoh kalimat baru:
+  ```csv
+  Bahasa_Bima,Bahasa_Indonesia
+  KalimatBima,TerjemahanIndonesia
+  ```
 
-**Tambah kosakata** → buka `kosakata_bima_indonesia.csv`:
-```csv
-Bahasa_Bima,Bahasa_Indonesia
-Nahu,Saya (Kasual)
-Mada,Saya (Sopan)
-...
-KataBaru,TerjemahanBaru        ← tambahkan di baris baru
-```
-
-**Tambah kalimat** → buka `kalimat_bima_indonesia.csv`:
-```csv
-Bahasa_Bima,Bahasa_Indonesia
-Au taho nggomi?,Apa kabar kamu?
-...
-Kalimat baru dalam Bima,Terjemahan kalimat baru    ← tambahkan di baris baru
-```
-
-### 2. Jalankan script updater
-
+### 2. Jalankan Skrip Sinkronisasi
+Jalankan perintah Node.js berikut di terminal:
 ```bash
 node update-dataset.js
 ```
-
-Script akan:
-1. ✔ Membaca kedua file CSV
-2. ✔ Memperbarui array `vocabulary` dan `sentences` di `script.js`
-3. ✔ Menyimpan backup ke `script.js.bak`
-4. ✔ Menampilkan ringkasan dan preview 3 entri pertama
-
-### 3. Buka ulang `index.html` di browser
-
-Selesai! Dataset langsung terupdate.
+Skrip akan memvalidasi data CSV, memperbarui array pada `script.js`, dan membuat cadangan berkas secara otomatis.
 
 ---
 
-## 📊 Dataset
+## Matriks Kompatibilitas Peramban
 
-### Kosakata (`kosakata_bima_indonesia.csv`)
-
-| Kategori | Contoh |
-|---|---|
-| Kata Ganti | Nahu (Saya), Nggomi (Kamu), Sia (Dia) |
-| Kata Kerja | Ngaha (Makan), Lao (Pergi), Turo (Tidur) |
-| Kata Sifat | Taho (Baik), Na'e (Besar), To'i (Kecil) |
-| Benda | Uma (Rumah), Dana (Tanah), Oi (Air) |
-| Keluarga | Ina (Ibu), Ama (Ayah), Ompu (Kakek) |
-| Pertanyaan | Au taho? (Apa kabar?), Pira? (Berapa?) |
-
-### Kalimat (`kalimat_bima_indonesia.csv`)
-
-| Kategori | Contoh |
-|---|---|
-| Salam & Sapaan | Selamat wura. (Selamat pagi.) |
-| Perkenalan | Ipi cou nggomi? (Siapa nama kamu?) |
-| Keluarga | Ina nahu taho. (Ibu saya baik.) |
-| Aktivitas | Nahu lao ku uma. (Saya pergi ke rumah.) |
-| Pertanyaan | Pira harga au ndi? (Berapa harga ini?) |
-| Ekspresi | Dana Bima taho na'e. (Kampung Bima sangat indah.) |
+| Peramban | Penerjemah Teks | Speech-to-Text (STT) | Text-to-Speech (TTS) |
+| :--- | :---: | :---: | :---: |
+| Google Chrome 89+ | Didukung | Didukung | Didukung |
+| Microsoft Edge 89+ | Didukung | Didukung | Didukung |
+| Mozilla Firefox | Didukung | Terbatas | Didukung |
+| Apple Safari | Didukung | Terbatas | Didukung |
+| Opera | Didukung | Didukung | Didukung |
 
 ---
 
-## 🛠️ Teknologi
+## Lisensi
 
-| Teknologi | Kegunaan |
-|---|---|
-| **HTML5** | Struktur halaman |
-| **CSS3** (Vanilla) | Styling, animasi, responsive design |
-| **JavaScript** (Vanilla) | Logika translator, render tabel |
-| **Web Speech API** | Speech-to-Text & Text-to-Speech |
-| **Node.js** | Script `update-dataset.js` (offline tool) |
-| **Google Fonts** | Font Poppins |
-
----
-
-## 🌐 Kompatibilitas Browser
-
-| Browser | Translator | STT 🎤 | TTS 🔊 |
-|---|:---:|:---:|:---:|
-| Chrome 89+ | ✅ | ✅ | ✅ |
-| Edge 89+ | ✅ | ✅ | ✅ |
-| Firefox | ✅ | ⚠️ Terbatas | ✅ |
-| Safari | ✅ | ⚠️ Terbatas | ✅ |
-| Opera | ✅ | ✅ | ✅ |
-
-> ⚠️ **Catatan STT**: Speech-to-Text membutuhkan koneksi internet dan izin mikrofon dari browser.  
-> ⚠️ **Catatan Bahasa Bima**: Tidak ada kode bahasa khusus untuk Bima di Web Speech API, sehingga digunakan `id-ID` sebagai fallback.
-
----
-
-## 📝 Format CSV
-
-File CSV menggunakan format standar dengan aturan berikut:
-
-```
-Bahasa_Bima,Bahasa_Indonesia       ← baris pertama adalah HEADER (wajib)
-KataBima,TerjemahanIndonesia       ← setiap baris adalah satu entri
-```
-
-**Aturan penting:**
-- Baris pertama **harus** berisi header `Bahasa_Bima,Bahasa_Indonesia`
-- Pisahkan kolom dengan **koma** (`,`)
-- Jika nilai mengandung koma, bungkus dengan tanda kutip ganda: `"nilai, dengan koma"`
-- Baris kosong di akhir file diabaikan otomatis
-- Encoding: **UTF-8**
-
----
-
-## 🤝 Kontribusi Dataset
-
-Ingin menambahkan kosakata atau kalimat Bahasa Bima?
-
-1. Buka file `kosakata_bima_indonesia.csv` atau `kalimat_bima_indonesia.csv`
-2. Tambahkan entri baru di baris terakhir dengan format: `KataBima,TerjemahanIndonesia`
-3. Jalankan `node update-dataset.js`
-4. Verifikasi di browser
-
----
-
-## 📜 Lisensi
-
-Proyek ini dibuat secara terbuka untuk keperluan **pelestarian Bahasa Bima** dan **pendidikan budaya NTB**.  
-Bebas digunakan, dimodifikasi, dan disebarluaskan untuk tujuan non-komersial.
-
----
-
-<div align="center">
-
-**🌺 Bima-Nesia**  
-*Melestarikan Bahasa Bima* ♥  
-Dibangun dengan ❤️ untuk budaya Bima & NTB
-
-</div>
+Proyek ini dilisensikan di bawah [MIT License](LICENSE) - Hak Cipta (c) 2026 **Murdifin**.
